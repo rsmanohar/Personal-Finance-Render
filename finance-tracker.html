@@ -1,0 +1,313 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Personal Finance Tracker</title>
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <!-- Local Styles -->
+  <link rel="stylesheet" href="finance-css.css" />
+  <style>
+    #pageUpBtn {
+      display: none; /* Hidden by default */
+      position: fixed;
+      bottom: 20px;
+      right: 30px;
+      z-index: 99;
+      border: none;
+      outline: none;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      padding: 10px 15px;
+      border-radius: 50%;
+      font-size: 18px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    #pageUpBtn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <main class="container my-4">
+    <h2 class="mb-4 text-center">Personal Finance Tracker</h2>
+
+    <!-- Sign-in button removed as authentication is no longer handled by Google -->
+
+    <!-- Management Buttons -->
+    <div class="mb-3 d-flex gap-2">
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal">
+        + Add New Record
+      </button>
+      <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#addNameModal">
+        + Add New Name
+      </button>
+      <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+        + Add New Category
+      </button>
+    </div>
+
+    <!-- Modal for Adding New Record -->
+    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id="add-form">
+            <div class="modal-header">
+              <h5 class="modal-title" id="addModalLabel">Add New Record</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="add-date" class="form-label">Date</label>
+                <input type="date" class="form-control" id="add-date" required />
+              </div>
+              <div class="mb-3">
+                <label for="add-name-select" class="form-label">Name</label>
+                <select class="form-select" id="add-name-select" required>
+                  <option value="">Select a name</option>
+                  {/* Options will be populated by JavaScript */}
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="add-category-select" class="form-label">Category</label>
+                <select class="form-select" id="add-category-select" required>
+                  <option value="">Select a category</option>
+                  {/* Options will be populated by JavaScript */}
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="add-amount" class="form-label">Amount</label>
+                <input type="number" step="0.01" class="form-control" id="add-amount" required />
+              </div>
+              <div class="mb-3">
+                <label for="add-status" class="form-label">Status</label>
+                <select class="form-select" id="add-status" required>
+                  <option value="Paid">Paid</option>
+                  <option value="Pending">Pending</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="add-type" class="form-label">Type</label>
+                <select class="form-select" id="add-type" required>
+                  <option value="Income">Income</option>
+                  <option value="Expenses">Expenses</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="add-desc" class="form-label">Description</label>
+                <input type="text" class="form-control" id="add-desc" />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" id="save-record-btn">Save Record</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="section filter-section">
+      <div class="card p-3 mb-4">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-3">
+            <label for="month-filter" class="form-label"><strong>Month:</strong></label>
+            <input type="month" id="month-filter" class="form-control" />
+          </div>
+          <div class="col-md-3">
+            <label for="type-filter" class="form-label"><strong>Type:</strong></label>
+            <select id="type-filter" class="form-select">
+              <option value="All">All</option>
+              <option value="Income">Income</option>
+              <option value="Expenses">Expenses</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label for="status-filter" class="form-label"><strong>Status:</strong></label>
+            <select id="status-filter" class="form-select">
+              <option value="All">All</option>
+              <option value="Paid">Paid</option>
+              <option value="Pending">Pending</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label for="date-filter" class="form-label"><strong>Date:</strong></label>
+            <input type="date" id="date-filter" class="form-control" />
+          </div>
+          <div class="col-md-3">
+            <label for="name-filter" class="form-label"><strong>Name:</strong></label>
+            <select id="name-filter" class="form-select">
+              <option value="All">All</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label for="category-filter" class="form-label"><strong>Category:</strong></label>
+            <select id="category-filter" class="form-select">
+              <option value="All">All Categories</option>
+              {/* Options will be populated by JavaScript */}
+            </select>
+          </div>
+          <div class="col-md-12 text-end mt-2">
+            <button id="clear-filters-btn" class="btn btn-outline-secondary btn-sm">Clear All Filters</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="results-count" class="mb-3" aria-live="polite">Showing 0 results</div>
+
+    <div id="monthly-summary" class="my-4" aria-live="polite"></div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="finance-data">
+          <!-- Finance records will be dynamically populated here by JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </main> <!-- /.container -->
+
+  <!-- Modal for Editing Record -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editModalLabel">Edit Record</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="edit-form">
+            <input type="hidden" id="edit-row-index" />
+            <div class="mb-3">
+              <label for="modal-date" class="form-label">Date</label>
+              <input type="date" class="form-control" id="modal-date" required />
+            </div>
+            <div class="mb-3">
+              <label for="modal-name-select" class="form-label">Name</label>
+              <select class="form-select" id="modal-name-select" required>
+                 <option value="">Select a name</option>
+                 {/* Options will be populated by JavaScript */}
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="modal-category-select" class="form-label">Category</label>
+              <select class="form-select" id="modal-category-select" required>
+                <option value="">Select a category</option>
+                {/* Options will be populated by JavaScript */}
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="modal-amount" class="form-label">Amount</label>
+              <input type="number" step="0.01" class="form-control" id="modal-amount" required />
+            </div>
+            <div class="mb-3">
+              <label for="modal-status" class="form-label">Status</label>
+              <select class="form-select" id="modal-status" required>
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="modal-type" class="form-label">Type</label>
+              <select class="form-select" id="modal-type" required>
+                <option value="Income">Income</option>
+                <option value="Expenses">Expenses</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="modal-desc" class="form-label">Description</label>
+              <input type="text" class="form-control" id="modal-desc" />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" id="update-record-btn" class="btn btn-success">Update Record</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Adding New Name -->
+  <div class="modal fade" id="addNameModal" tabindex="-1" aria-labelledby="addNameModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <form id="add-name-form">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addNameModalLabel">Add New Name</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="new-name-value" class="form-label">Name Value</label>
+              <input type="text" class="form-control" id="new-name-value" required />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save Name</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Adding New Category -->
+  <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <form id="add-category-form">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addCategoryModalLabel">Add New Category</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="new-category-value" class="form-label">Category Value</label>
+              <input type="text" class="form-control" id="new-category-value" required />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save Category</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Firebase scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
+
+  <!-- Bootstrap Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Your JS Logic -->
+  <script src="finance-tracker.js"></script>
+
+  <button onclick="scrollToTop()" id="pageUpBtn" title="Go to top">↑</button>
+</body>
+</html>

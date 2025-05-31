@@ -1,0 +1,130 @@
+/* Reset and base styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 20px;
+}
+
+h5 {
+  margin-bottom: 15px;
+}
+
+/* Section spacing */
+.section {
+  background-color: #ffffff;
+  padding: 20px;
+  margin-bottom: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Filter section */
+/* General Layout */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+  padding: 15px;
+}
+
+/* Section Styling */
+.section {
+  margin-bottom: 30px;
+}
+
+/* Card Styling */
+.card {
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  background-color: #ffffff;
+}
+
+/* Filter Fields */
+.filter-section .form-label {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.filter-section .form-control,
+.filter-section .form-select {
+  font-size: 14px;
+  height: 38px;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Responsive Behavior */
+@media (max-width: 768px) {
+  .filter-section .row.g-3 {
+    flex-direction: column;
+  }
+
+  .filter-section .col-md-3 {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .filter-section .col-md-3:last-child {
+    margin-bottom: 0;
+  }
+}
+
+
+/* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  font-size: 14px;
+}
+
+th, td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+thead {
+  background-color: #f1f1f1;
+}
+
+td:nth-child(3) {
+  font-weight: bold;
+}
+
+td:nth-child(2),
+td:nth-child(4),
+td:nth-child(5) {
+  white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .filter-section {
+    flex-direction: column;
+  }
+
+  table {
+    font-size: 13px;
+  }
+
+  th, td {
+    padding: 8px;
+  }
+
+  .section {
+    padding: 15px;
+  }
+}
+
+/* Monthly Summary table */
+#monthly-summary table {
+  margin-top: 10px;
+}
+
+#results-count {
+  margin-top: 10px;
+  font-weight: 500;
+}
