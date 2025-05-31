@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: personal-finance-render
+    env: node
+    plan: free
+    branch: main
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: true
+    repo: https://github.com/rsmanohar/Personal-Finance-Render.git
